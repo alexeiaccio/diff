@@ -1,0 +1,17 @@
+{
+  "name": "diff",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vitest -u",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prettier": "^3.0.0",
+    "vitest": "^0.33.0"
+  }
+}
