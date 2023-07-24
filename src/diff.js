@@ -163,7 +163,7 @@ function recursion(arr, level = 1) {
         res.push(`${indent}  }`);
         res.push(`${indent}+ ${key}: ${new_value}`);
       } else {
-        //  - left and right is primitive
+        // 5. Changed – if left and right have different primitive values
         res.push(`${indent}- ${key}: ${old_value}`);
         res.push(`${indent}+ ${key}: ${new_value}`);
       }
@@ -173,7 +173,7 @@ function recursion(arr, level = 1) {
       res.push(...recursion(children, level + 2));
       res.push(`${indent}  }`);
     } else if (type === "unchanged") {
-      // 5. Unchanged – if left and right have same primitive values
+      // 6. Unchanged – if left and right have same primitive values
       res.push(`${indent}  ${key}: ${new_value}`);
     }
   });
