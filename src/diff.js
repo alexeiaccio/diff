@@ -103,7 +103,7 @@ export function diff(left, right) {
     }
   });
 
-  return result;
+  return result.sort((a, b) => a.key.localeCompare(b.key));
 }
 
 /**
@@ -228,67 +228,32 @@ if (import.meta.vitest) {
       },
       changed_to_primitive: "changed_to_primitive",
     },
+    added_other_object: {
+      added_other_value: "added_other_value",
+    },
   };
   test("diff", () => {
     const result = diff(LEFT, RIGHT);
     expect(result).toMatchInlineSnapshot(`
       [
         {
-          "key": "added_primitive",
-          "new_value": "added_primitive",
+          "key": "added_other_object",
+          "new_value": [
+            {
+              "key": "added_other_value",
+              "new_value": "added_other_value",
+              "old_value": "added_other_value",
+              "type": "unchanged",
+            },
+          ],
           "old_value": null,
           "type": "added",
         },
         {
-          "key": "unchanged_primitive",
-          "new_value": "unchanged_primitive",
-          "old_value": "unchanged_primitive",
-          "type": "unchanged",
-        },
-        {
-          "key": "changed_primitive",
-          "new_value": "changed_primitive",
-          "old_value": "changed",
-          "type": "changed",
-        },
-        {
-          "key": "deleted_primitive",
-          "new_value": null,
-          "old_value": "deleted_primitive",
-          "type": "removed",
-        },
-        {
-          "children": [
-            {
-              "key": "added_object",
-              "new_value": [
-                {
-                  "key": "added_unchanged",
-                  "new_value": "added_unchanged",
-                  "old_value": "added_unchanged",
-                  "type": "unchanged",
-                },
-              ],
-              "old_value": null,
-              "type": "added",
-            },
-            {
-              "key": "nested_unchanged",
-              "new_value": "nested_unchanged",
-              "old_value": "nested_unchanged",
-              "type": "unchanged",
-            },
-            {
-              "key": "nested_deleted",
-              "new_value": null,
-              "old_value": "nested_deleted",
-              "type": "removed",
-            },
-          ],
-          "key": "nested",
-          "new_value": null,
+          "key": "added_primitive",
+          "new_value": "added_primitive",
           "old_value": null,
-          "type": "nested",
+          "type": "added",
         },
         {
           "children": [
@@ -333,6 +298,51 @@ if (import.meta.vitest) {
           "type": "nested",
         },
         {
+          "key": "changed_primitive",
+          "new_value": "changed_primitive",
+          "old_value": "changed",
+          "type": "changed",
+        },
+        {
+          "key": "deleted_primitive",
+          "new_value": null,
+          "old_value": "deleted_primitive",
+          "type": "removed",
+        },
+        {
+          "children": [
+            {
+              "key": "added_object",
+              "new_value": [
+                {
+                  "key": "added_unchanged",
+                  "new_value": "added_unchanged",
+                  "old_value": "added_unchanged",
+                  "type": "unchanged",
+                },
+              ],
+              "old_value": null,
+              "type": "added",
+            },
+            {
+              "key": "nested_deleted",
+              "new_value": null,
+              "old_value": "nested_deleted",
+              "type": "removed",
+            },
+            {
+              "key": "nested_unchanged",
+              "new_value": "nested_unchanged",
+              "old_value": "nested_unchanged",
+              "type": "unchanged",
+            },
+          ],
+          "key": "nested",
+          "new_value": null,
+          "old_value": null,
+          "type": "nested",
+        },
+        {
           "key": "removed_object",
           "new_value": null,
           "old_value": [
@@ -345,6 +355,12 @@ if (import.meta.vitest) {
           ],
           "type": "removed",
         },
+        {
+          "key": "unchanged_primitive",
+          "new_value": "unchanged_primitive",
+          "old_value": "unchanged_primitive",
+          "type": "unchanged",
+        },
       ]
     `);
   });
@@ -352,18 +368,10 @@ if (import.meta.vitest) {
     const result = printDiff(diff(LEFT, RIGHT));
     expect(result).toMatchInlineSnapshot(`
       "{
-        + added_primitive: added_primitive
-          unchanged_primitive: unchanged_primitive
-        - changed_primitive: changed
-        + changed_primitive: changed_primitive
-        - deleted_primitive: deleted_primitive
-          nested: {
-            + added_object: {
-                  added_unchanged: added_unchanged
-              }
-              nested_unchanged: nested_unchanged
-            - nested_deleted: nested_deleted
+        + added_other_object: {
+              added_other_value: added_other_value
           }
+        + added_primitive: added_primitive
           changed_nested: {
             - changed_to_object: changed_to_object
             +  changed_to_object: {
@@ -376,9 +384,20 @@ if (import.meta.vitest) {
               }
             + changed_to_primitive: changed_to_primitive
           }
+        - changed_primitive: changed
+        + changed_primitive: changed_primitive
+        - deleted_primitive: deleted_primitive
+          nested: {
+            + added_object: {
+                  added_unchanged: added_unchanged
+              }
+            - nested_deleted: nested_deleted
+              nested_unchanged: nested_unchanged
+          }
         - removed_object: {
               removed_value: removed_value
           }
+          unchanged_primitive: unchanged_primitive
       }"
     `);
   });
